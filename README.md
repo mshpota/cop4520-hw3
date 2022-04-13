@@ -24,7 +24,7 @@ For ordered list, originally I decided to implement using non-blocking list from
 
 #### HOW TO RUN
 
-To run this program, navigate to the birthday-presents-party/ directory and type the following commands in the terminal window:
+To run this program, navigate to the [birthday-presents-party/](https://github.com/mshpota/cop4520-hw3/tree/main/birthday-presents-party) directory and type the following commands in the terminal window:
 
 ```
 javac BirthdayPresentsParty.java
@@ -32,17 +32,11 @@ javac BirthdayPresentsParty.java
 java BirthdayPresentsParty
 ```
 
-
-
 ## PROBLEM 2:
 
 #### IMPLEMENTATION
 
-
-
 **Times:**
-
-
 
 #### HOW TO RUN
 
@@ -53,8 +47,6 @@ javac .java
 
 java 
 ```
-
-
 
 [^1]: Herlihy, M., & Shavit, N. (2012). *The Art of Multiprocessor Programming,
  Revised Reprint* (1st ed., pp. 151-154). Morgan Kaufmann.
