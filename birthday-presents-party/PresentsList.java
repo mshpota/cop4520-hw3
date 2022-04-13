@@ -80,8 +80,6 @@ public class PresentsList {
         }
     }
     
-    
-
     public boolean contains(int target) {
         Node curr = head;
 
