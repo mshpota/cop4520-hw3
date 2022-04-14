@@ -12,6 +12,7 @@ public class TemperatureModule {
         DataBuffer buffer = new DataBuffer();
         SensorThread [] sensors = new SensorThread[NUM_OF_SENSORS];
         AnalyzerThread analyzer = new AnalyzerThread(buffer);
+        Thread analyzerTh = new Thread(analyzer);
         
         // Start sensors.
         for (int i = 0; i < NUM_OF_SENSORS; i++) {
@@ -19,7 +20,7 @@ public class TemperatureModule {
             new Thread(sensors[i]).start();
         }
         // Start analyzer.
-        new Thread(analyzer).start();
+        analyzerTh.start();
 
         // Minute timer.
         for (int i = 1; i < TIME_IN_MINS+1; i++) {    
@@ -37,7 +38,11 @@ public class TemperatureModule {
         // Stopping threads.
         for (int i = 0; i < NUM_OF_SENSORS; i++) 
             sensors[i].stopWorking();
-        analyzer.stopWorking();
+        
+        try {
+            analyzer.stopWorking();
+            analyzerTh.join();
+        } catch (InterruptedException ex) {}
 
         // printBuffer(buffer);
     }
@@ -69,7 +74,7 @@ public class TemperatureModule {
 class SensorThread implements Runnable {
     private static final int SLEEP_TIME_IN_MS = 17;
     private volatile boolean stop = false;
-    DataBuffer buffer;
+    private DataBuffer buffer;
 
     public SensorThread(DataBuffer buffer) {
         this.buffer = buffer;
@@ -97,8 +102,8 @@ class SensorThread implements Runnable {
 class AnalyzerThread implements Runnable {
     private volatile boolean stop = false;
     private volatile boolean process = false;
+    private DataBuffer buffer;
     private int [][] moduleMemory;
-    DataBuffer buffer;
 
     public AnalyzerThread(DataBuffer buffer) {
         this.buffer = buffer;
@@ -121,7 +126,9 @@ class AnalyzerThread implements Runnable {
     // Function that takes its input from buffer and copies it into 
     // the local memory. It then processes the data and outputs the 
     // results according to assignment instructions.
-    public static void analyzeTemperatures(DataBuffer buffer, int[][] moduleMemory) {
+    public void analyzeTemperatures(DataBuffer buffer, int[][] moduleMemory) {
+        flushMemory(moduleMemory);
+
         // Copy data into the local memory.
         for (int i = 0; i < 6; i++) {
             for (int j = 0; j < 80; j++) {
@@ -139,6 +146,15 @@ class AnalyzerThread implements Runnable {
         //     }  
         // }
         // System.out.println();
+    }
+
+    // Overwrites memory space with integers out of valid range.
+    public void flushMemory(int[][] memory) {
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 80; j++) {
+                moduleMemory[i][j] = Integer.MIN_VALUE;
+            }
+        }
     }
 
     public void stopWorking() {
