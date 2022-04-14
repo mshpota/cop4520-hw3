@@ -103,11 +103,11 @@ class AnalyzerThread implements Runnable {
     private volatile boolean stop = false;
     private volatile boolean process = false;
     private DataBuffer buffer;
-    private int [][] moduleMemory;
+    private int [] moduleMemory;
 
     public AnalyzerThread(DataBuffer buffer) {
         this.buffer = buffer;
-        moduleMemory = new int[6][80];
+        moduleMemory = new int[480];
     }
 
     public void run() {
@@ -126,35 +126,23 @@ class AnalyzerThread implements Runnable {
     // Function that takes its input from buffer and copies it into 
     // the local memory. It then processes the data and outputs the 
     // results according to assignment instructions.
-    public void analyzeTemperatures(DataBuffer buffer, int[][] moduleMemory) {
-        flushMemory(moduleMemory);
+    public void analyzeTemperatures(DataBuffer buffer, int[] moduleMemory) {
+        // Flush memory.
+        for (int i = 0; i < 480; i++) 
+            moduleMemory[i] = Integer.MIN_VALUE;
 
         // Copy data into the local memory.
-        for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 80; j++) {
-                try {
-                    moduleMemory[i][j] = buffer.dequeue();
-                } catch (EmptyBufferException ex) {}
-            }
+        for (int i = 0; i < 480; i++) {
+            try {
+                moduleMemory[i] = buffer.dequeue();
+            } catch (EmptyBufferException ex) {}
         }
         
-        // For debugging.
+        // // For debugging.
         // System.out.println("\nModule memory:");
-        // for (int i = 0; i < 6; i++) {
-        //     for (int k = 0; k < 80; k++) {
-        //         System.out.print(moduleMemory[i][k] + " ");
-        //     }  
-        // }
+        // for (int i = 0; i < 480; i++) 
+        //     System.out.print(moduleMemory[i] + " ");
         // System.out.println();
-    }
-
-    // Overwrites memory space with integers out of valid range.
-    public void flushMemory(int[][] memory) {
-        for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 80; j++) {
-                moduleMemory[i][j] = Integer.MIN_VALUE;
-            }
-        }
     }
 
     public void stopWorking() {
