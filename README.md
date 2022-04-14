@@ -40,15 +40,11 @@ Similar to Problem 1, main thread serves as a starting point and plays the role 
 
 Temperature analyzer is implemented with use of separate AnalyzerThread class that implements Runnable interface and works as an analyzing unit. When signaled by main module it proceeds to get data from the buffer and store it in a local memory space that is made out of integer array. After copying, it proceeds to analyze the collected data  over  the last hour and after that produce an output according to the assignment instructions. 
 
-Note: work on the temperature analyzer is currently in progress...
+
 
 Expected number of readings to be collected each hour is 480.
 
 Time scale: 17 ms : 1 minute.
-
-**Times:**
-
-Not yet tested...
 
 #### HOW TO RUN
 

@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 
@@ -43,8 +44,6 @@ public class TemperatureModule {
             analyzer.stopWorking();
             analyzerTh.join();
         } catch (InterruptedException ex) {}
-
-        // printBuffer(buffer);
     }
 
     // For debugging.
@@ -126,23 +125,52 @@ class AnalyzerThread implements Runnable {
     // Function that takes its input from buffer and copies it into 
     // the local memory. It then processes the data and outputs the 
     // results according to assignment instructions.
-    public void analyzeTemperatures(DataBuffer buffer, int[] moduleMemory) {
+    public void analyzeTemperatures(DataBuffer buffer, int[] mem) {
         // Flush memory.
         for (int i = 0; i < 480; i++) 
-            moduleMemory[i] = Integer.MIN_VALUE;
+            mem[i] = Integer.MIN_VALUE;
 
         // Copy data into the local memory.
         for (int i = 0; i < 480; i++) {
             try {
-                moduleMemory[i] = buffer.dequeue();
+                mem[i] = buffer.dequeue();
             } catch (EmptyBufferException ex) {}
         }
-        
-        // // For debugging.
+
+        // Find largest difference on 10 min interval.
+        int largestDiff = -1;
+        int idx = -1;
+
+        for (int i = 0; i < 480; i += 80) {
+            Arrays.sort(mem, i, i + 80);
+
+            int diff = Math.abs(mem[i+79] - mem[i]);
+            if (diff > largestDiff) {
+                largestDiff = diff;
+                idx = i;
+            }
+        }
+
+        // For debugging.
         // System.out.println("\nModule memory:");
         // for (int i = 0; i < 480; i++) 
         //     System.out.print(moduleMemory[i] + " ");
         // System.out.println();
+
+        System.out.print("Largest temperature difference = " + largestDiff);
+        System.out.println(", on interval from " + (idx / 80 * 10) + 
+                           " to " + (idx / 80 * 10 + 10) + " mins");
+
+        Arrays.sort(mem, 0, 480);
+        System.out.print("Five highest temperatures: ");
+        for (int i = 479; i > 473; i--)
+            System.out.print(mem[i] + " ");
+        System.out.println();
+
+        System.out.print("Five lowest temperatures: ");
+        for (int i = 0; i < 5; i++)
+            System.out.print(mem[i] + " ");
+        System.out.println();
     }
 
     public void stopWorking() {
