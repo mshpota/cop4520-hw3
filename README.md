@@ -24,7 +24,7 @@ For ordered list, originally I decided to implement using non-blocking list from
 
 #### HOW TO RUN
 
-To run this program, navigate to the [birthday-presents-party/](https://github.com/mshpota/cop4520-hw3/tree/main/birthday-presents-party) directory and type the following commands in the terminal window:
+To run this program, in terminal window navigate to the [birthday-presents-party/](https://github.com/mshpota/cop4520-hw3/tree/main/birthday-presents-party) directory and type the following commands:
 
 ```
 javac BirthdayPresentsParty.java
@@ -36,16 +36,22 @@ java BirthdayPresentsParty
 
 #### IMPLEMENTATION
 
+Analogous to Problem 1, main thread serves as a starting point and plays the role of temperature module that will collect all the data from the sensors and then analyze it. Temperature sensors implemented with SensorThread class that implements Runnable interface. The  sensors use ThreadLocalRandom class to produce  random temperature readings in the given range and push them into the buffer. The data buffer is used for transferring readings from sensors to the module's temperature analyzer, and  it is implemented as an unbounded Lock-Free Queue to maximize its performance. It is lock-free, and in its implementation starvation is prevented by having the quicker threads help the slower threads in setting the tail pointer[1].
+
+Work on the temperature analyzer is currently in progress...
+
 **Times:**
+
+Not yet tested...
 
 #### HOW TO RUN
 
-To run this program, navigate to the directory with the file and type the following commands in the terminal window:
+To run this program, in terminal window navigate to the [**atmospheric-temperature-reading-module**/](https://github.com/mshpota/cop4520-hw3/tree/main/atmospheric-temperature-reading-module) directory and type the following commands:
 
 ```
-javac .java
+javac TemperatureModule.java 
 
-java 
+java TemperatureModule
 ```
 
 [^1]: Herlihy, M., & Shavit, N. (2012). *The Art of Multiprocessor Programming,
