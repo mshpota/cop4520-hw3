@@ -36,7 +36,7 @@ java BirthdayPresentsParty
 
 #### IMPLEMENTATION
 
-Analogous to Problem 1, main thread serves as a starting point and plays the role of temperature module that will collect all the data from the sensors and then analyze it. Temperature sensors implemented with SensorThread class that implements Runnable interface. The  sensors use ThreadLocalRandom class to produce  random temperature readings in the given range and push them into the buffer. The data buffer is used for transferring readings from sensors to the module's temperature analyzer, and  it is implemented as an unbounded Lock-Free Queue to maximize its performance. It is lock-free, and in its implementation starvation is prevented by having the quicker threads help the slower threads in setting the tail pointer[1].
+Similar to Problem 1, main thread serves as a starting point and plays the role of temperature module that will collect all the data from the sensors and then analyze it. Temperature sensors implemented with SensorThread class that implements Runnable interface. The  sensors use ThreadLocalRandom class to produce  random temperature readings in the given range and push them into the buffer. The data buffer is used for transferring readings from sensors to the module's temperature analyzer, and  it is implemented as an unbounded Lock-Free Queue to maximize its performance. It is lock-free, and in its implementation starvation is prevented by having the quicker threads help the slower threads in setting the tail pointer[^1].
 
 Work on the temperature analyzer is currently in progress...
 
